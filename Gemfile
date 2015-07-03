@@ -6,7 +6,7 @@ gem 'rails', '4.2.2'
 
 gem 'activeadmin', '~> 1.0.0.pre1'
 gem 'devise'
-gem 'sqlite3'
+gem 'pg'
 
 gem 'slim'
 gem 'stripe'
