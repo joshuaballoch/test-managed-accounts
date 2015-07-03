@@ -27,14 +27,25 @@ ActiveAdmin.register StripeManagedAccount do
   end
 
   form do |f|
-    inputs 'Marina Info - TBD but this should pull from the main app as a search or something' do
-      input :marina_external_id
-      input :marina_name
-    end
-    actions
-    panel 'Notes' do
-      "Clicking 'create' below will create a Stripe Managed Account with country set to U.S.
+
+    if f.object.new_record?
+      inputs 'Marina Info - TBD but this should pull from the main app as a search or something' do
+        input :marina_external_id
+        input :marina_name
+      end
+      actions
+      panel 'Notes' do
+        "Clicking 'create' below will create a Stripe Managed Account with country set to U.S.
        You can add banking and other info afterward."
+      end
+    else
+      inputs "Marina Info" do
+        input :marina_name
+      end
+      inputs "Stripe Account Data" do
+        input :business_name
+      end
+      actions
     end
   end
 
@@ -55,6 +66,12 @@ ActiveAdmin.register StripeManagedAccount do
       end
     end
 
+    def edit
+      internal_account = StripeManagedAccount.find(params[:id])
+      stripe_account_info = Stripe::Account.retrieve(internal_account.stripe_account_id)
+      @stripe_managed_account = StripeFormObject.new(stripe_managed_account: internal_account, stripe_account_info: stripe_account_info)
+    end
+
     def show
       account = StripeManagedAccount.find(params[:id])
       @stripe_account_info = Stripe::Account.retrieve(account.stripe_account_id)
@@ -62,4 +79,26 @@ ActiveAdmin.register StripeManagedAccount do
     end
 
   end
+end
+
+# NOTE: just shimming this class in here for now
+#       need to find the right abstraction (LATER)
+class StripeFormObject
+
+  attr_reader :stripe_managed_account, :stripe_account_info
+
+  def initialize(stripe_managed_account:, stripe_account_info:)
+    @stripe_managed_account = stripe_managed_account
+    @stripe_account_info = stripe_account_info
+  end
+
+  def self.model_name
+    StripeManagedAccount.model_name
+  end
+
+  delegate :persisted?, :new_record?, :to => :stripe_managed_account
+  delegate :marina_name, :marina_external_id, :to => :stripe_managed_account
+
+  delegate :business_name, :to => :stripe_account_info
+
 end
