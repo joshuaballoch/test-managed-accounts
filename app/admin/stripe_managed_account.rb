@@ -1,6 +1,13 @@
 ActiveAdmin.register StripeManagedAccount do
   permit_params :marina_external_id, :marina_name
 
+  index do
+    id_column
+    column :marina_name
+    column :marina_external_id
+    column :stripe_account_id
+  end
+
   form do |f|
     inputs 'Marina Info - TBD but this should pull from the main app as a search or something' do
       input :marina_external_id
