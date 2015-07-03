@@ -1,0 +1,14 @@
+table
+  tbody
+    tr
+      td Business Name
+      td = stripe_account_info.business_name
+    tr
+      td Verified?
+      td = stripe_account_info.verification.fields_needed.none?
+
+- if stripe_account_info.verification.fields_needed.any?
+  h5 Fields Needed for Verification
+  ul
+    - stripe_account_info.verification.fields_needed.each do |field_needed|
+      li = field_needed

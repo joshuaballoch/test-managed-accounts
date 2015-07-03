@@ -8,6 +8,7 @@ gem 'activeadmin', '~> 1.0.0.pre1'
 gem 'devise'
 gem 'sqlite3'
 
+gem 'slim'
 gem 'stripe'
 
 # Assets-related jems
