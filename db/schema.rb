@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701122907) do
+ActiveRecord::Schema.define(version: 20150702110213) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -45,5 +45,19 @@ ActiveRecord::Schema.define(version: 20150701122907) do
 
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+
+  create_table "stripe_managed_accounts", force: :cascade do |t|
+    t.string   "marina_external_id"
+    t.string   "marina_name"
+    t.string   "stripe_account_id"
+    t.string   "stripe_secret_key"
+    t.string   "stripe_publishable_key"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "stripe_managed_accounts", ["marina_external_id"], name: "index_stripe_managed_accounts_on_marina_external_id", unique: true
+  add_index "stripe_managed_accounts", ["marina_name"], name: "index_stripe_managed_accounts_on_marina_name", unique: true
+  add_index "stripe_managed_accounts", ["stripe_account_id"], name: "index_stripe_managed_accounts_on_stripe_account_id", unique: true
 
 end
